@@ -1,12 +1,3 @@
---[[
-#//******************************//#
-#//# Author: by uriid1          #//#
-#//# license: GNU GPL           #//#
-#//# telegram: uriid1           #//#
-#//# Mail: appdurov@gmail.com   #//#
-####****************************####
---]]
-
 local pi   = math.pi;
 local sin  = math.sin;
 local cos  = math.cos;

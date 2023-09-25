@@ -1,24 +1,23 @@
+
 --
-local bit = require("bit");
---
-local pairs  = pairs;
-local remove = table.remove;
+local pairs    = pairs;
+local remove   = table.remove;
 --
 local tonumber = tonumber;
 local tostring = tostring;
-local lower = string.lower;
-local sub 	= string.sub;
+local lower    = string.lower;
+local sub      = string.sub;
 --
-local pi 	= math.pi;
-local cos 	= math.cos;
-local sin 	= math.sin;
-local atan2 = math.atan2;
-local sqrt  = math.sqrt;
-local floor = math.floor;
-local ceil 	= math.ceil;
-local min 	= math.min;
-local max 	= math.max;
-local random = math.random;
+local pi       = math.pi;
+local cos      = math.cos;
+local sin      = math.sin;
+local atan2    = math.atan2;
+local sqrt     = math.sqrt;
+local floor    = math.floor;
+local ceil     = math.ceil;
+local min      = math.min;
+local max      = math.max;
+local random   = math.random;
 --
 local lg = love.graphics; 
 
@@ -27,8 +26,34 @@ math.randomseed(os.time());
 _D2R = pi / -180;
 _R2D = -180 / pi;
 
---- Global's
+-- Global's
 global = {}
+
+-- Game
+function game_save()
+	if current_room then
+		-- Create data
+		local data = {};
+		data.room_index = current_room.index;
+		data.lives      = global.lives;
+		
+		-- Serialize
+		serialize.save(data, "save0.sav");
+	end
+end
+
+function check_save()
+	return love.filesystem.getInfo("save0.sav");
+end
+
+function load_save()
+	-- load and deserialize
+	local data = serialize.load("save0.sav");
+	
+	-- Set
+	global.lives      = data.lives;
+	global.room_index = data.room_index;
+end
 
 -- Extra mathematical functions
 function sign(x)
@@ -48,7 +73,7 @@ function range(val, val_min, val_max)
 end
 
 function lerp(v0, v1, t)
-	return v0 * (1.0 - t) + t * v1 ;
+	return v0 * (1.0 - t) + t * v1;
 end
 
 -- Trig functions
@@ -78,10 +103,6 @@ end
 
 function radtodeg(degree)
 	return degree * _R2D;
-end
-
-function static(var, num)
-    return (var == nil) and num or var;
 end
 
 -- Всратая Сортировка
@@ -213,7 +234,7 @@ end
 -------- Slice
 function draw_sclice(spr, quad, x1, y1, x2, y2)
 	--
-	local size = static(size, spr:getWidth() / 3);
+	local size = spr:getWidth() / 3;
 
 	--
 	local width  = x2 - x1;
@@ -238,10 +259,10 @@ end
 
 -------- Комнаты ---------
 function room_goto(_room)
-	--collectgarbage("collect")
+	-- collectgarbage("collect")
 	current_room = _room
 	if current_room.init then
-		current_room:init();
+		current_room:init(true);
 	end
 end
 
@@ -290,74 +311,3 @@ function draw_sheet_outline(_spr, _obj)
 	lg.rectangle("line", _obj.x - _spr.frame_xoffset, _obj.y - _spr.frame_xoffset, _spr.frame_w, _spr.frame_h)
 end
 ---------------------------------
-
---- Возможно нахуй не нужная функции
---[[
--- функция возращает реальное напрвление(BETA)
-function real_direction(_dir)
-	local temp = _dir
-	return (_dir > 0) and _dir or (-360 - temp) * -1
-end
---
-function intDiv(val, by)
-    return floor((val - val % by) / by);
-end
-
------------ luajit FFI функции -----------
-local ffi = require("ffi")
-
--- Целочисленное присвоение
-local function int(var)
-  return ffi.new("int", var);
-end
-]]
-
---[[ Список того что есть
-
-	Анимации:
-		animation.loop
-		animation.to_end
-		animation.ping_pong
-		
-	Математика:
-		sign
-		round
-		clamp
-		range
-		lerp
-
-	Тригонометрия:
-		lengthdir_x
-		lengthdir_y
-		point_direction
-		angle_difference
-		distance_to_point
-		degtorad
-		radtodeg
-
-	Игровые:
-		choose
-		enum
-		move_towards_point
-		instance_destroy
-		real_direction
-		room_goto	
-
-	Цвета:
-		rgba
-		hex
-	
-	ООП:
-		inherit
-
-	Маски:
-		add_mask
-
-	Интерфесы:
-		draw_sclice
-
-	Отладка:
-		draw_mask_outline
-		draw_sprite_outline
-		draw_sheet_outline
-]]

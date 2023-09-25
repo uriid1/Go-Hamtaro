@@ -1,9 +1,3 @@
---[[
-    This project is based on -> github.com/rxi/lume
-    Editor: by uriid1
-    Version: 1.0
---]]
-
 --
 local serialize = {};
 
